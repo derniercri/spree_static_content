@@ -6,7 +6,7 @@ module Spree
     def show
       filtered_path = request.path.gsub(/\/(#{SpreeGlobalize::Config.supported_locales.join('|')})/, '')
       locale =  request.path.gsub(filtered_path, '')
-      @page = Spree::StaticPage.finder_scope.by_store(current_store).find_by!(slug: filtered_path)
+      @page = Spree::StaticPage.finder_scope.by_store(current_store).where('spree_page_translations.slug = ?', filtered_path).first
     end
 
     private

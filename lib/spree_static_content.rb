@@ -19,7 +19,7 @@ module Spree
     def self.matches?(request)
       filtered_path = request.path.gsub(/\/(#{SpreeGlobalize::Config.supported_locales.join('|')})/, '')
       return false if filtered_path =~ %r{\A\/+(admin|account|cart|checkout|content|login|pg\/|orders|products|s\/|session|signup|shipments|states|t\/|tax_categories|user)+}
-      !self.finder_scope.find_by(slug: filtered_path).nil?
+      self.finder_scope.where('spree_page_translations.slug = ?', filtered_path).any?
     end
 
     protected
