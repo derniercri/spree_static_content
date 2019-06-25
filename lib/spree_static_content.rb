@@ -17,12 +17,13 @@ end
 module Spree
   class StaticPage
     def self.matches?(request)
-      return false if request.path =~ %r{\A\/+(admin|account|cart|checkout|content|login|pg\/|orders|products|s\/|session|signup|shipments|states|t\/|tax_categories|user)+}
-      !self.finder_scope.find_by(slug: request.path).nil?
+      filtered_path = request.path.gsub(/\/(#{SpreeGlobalize::Config.supported_locales.join('|')})/, '')
+      return false if filtered_path =~ %r{\A\/+(admin|account|cart|checkout|content|login|pg\/|orders|products|s\/|session|signup|shipments|states|t\/|tax_categories|user)+}
+      !self.finder_scope.find_by(slug: filtered_path).nil?
     end
 
     protected
-    
+
     def self.finder_scope
       scope = Spree::Page.visible
       scope = scope.joins(:translations) if defined?(SpreeGlobalize)

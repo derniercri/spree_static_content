@@ -4,7 +4,9 @@ module Spree
     layout :determine_layout
 
     def show
-      @page = Spree::StaticPage.finder_scope.by_store(current_store).find_by!(slug: request.path)
+      filtered_path = request.path.gsub(/\/(#{SpreeGlobalize::Config.supported_locales.join('|')})/, '')
+      locale =  request.path.gsub(filtered_path, '')
+      @page = Spree::StaticPage.finder_scope.by_store(current_store).find_by!(slug: filtered_path)
     end
 
     private
